@@ -1,6 +1,8 @@
 import os
+import requests,json
 import pyttsx3
 import speech_recognition as ss
+import pyjokes
 def takeQuery():
     try:
         sr = ss.Recognizer()                         ##this will return an object of class Recognizer
@@ -13,6 +15,14 @@ def takeQuery():
             return query
     except Exception:
         return "Error! Some problem with device!"
+
+def weather(city):
+    url='http://api.openweathermap.org/data/2.5/weather?appid=0c42f7f6b53b244c78a418f4f181282a&q='+city
+    response=requests.get(url)
+    res=response.json()
+    print(response)
+    print(res)
+
 
 pyttsx3.speak("Hello! My name is Aude, your personal assistant")
 print("1. Speech\n2. Text")
@@ -28,7 +38,7 @@ else:
     s=takeQuery()
 
 while(True):
-        print(s)
+        #print(s)
         l=s.split()
         if "Error" in s:
             pyttsx3.speak("Sorry! Some error occurred. please try again")
@@ -57,7 +67,10 @@ while(True):
             input()
         elif "search" in l or "google" in l:
             pyttsx3.speak("please enter search query")
-            q=takeQuery()
+            if n==1:
+                q=takeQuery()
+            else:
+                q=input()
             pyttsx3.speak("Opening google chrome for you")
             pyttsx3.speak("press enter to continue")
             os.system("start chrome https://www.google.com/search?q="+q)
@@ -72,6 +85,13 @@ while(True):
             pyttsx3.speak("press enter to continue")
             os.system("start chrome gmail.com")
             input()
+        elif "joke" in l or "jokes" in l:
+            joke=pyjokes.get_joke()
+            print(joke)
+            pyttsx3.speak(joke)
+        elif "repeat" in l or "say again" in s or "come again" in s:
+            print(joke)
+            pyttsx3.speak(joke)
         elif "end" in l or "exit" in l or "goodbye" in l or "standby" in l:
             pyttsx3.speak("going for a nap! good bye!")
             break
